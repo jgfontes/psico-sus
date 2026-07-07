@@ -1,0 +1,161 @@
+# Inter-service depends_on edges are intentionally omitted beyond postgres/rabbitmq/auth-service:
+# the REST calls between queue/availability/session/supervision form a cycle
+# (availability -> session, session -> availability, supervision -> session), so Compose can't
+# order them anyway. Bring the whole stack up together; each service retries on first use.
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: psicosus
+      POSTGRES_PASSWORD: psicosus
+      POSTGRES_DB: psicosus
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U psicosus"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672" # management panel: http://localhost:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: psicosus
+      RABBITMQ_DEFAULT_PASS: psicosus
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      JWT_EXPIRATION_SECONDS: 28800
+      JWT_PATIENT_EXPIRATION_SECONDS: 7200
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  queue-service:
+    build: ./queue-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: psicosus
+      SPRING_RABBITMQ_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  availability-service:
+    build: ./availability-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: psicosus
+      SPRING_RABBITMQ_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      SESSION_SERVICE_URL: http://session-service:8083
+      SUPERVISION_SERVICE_URL: http://supervision-service:8084
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  session-service:
+    build: ./session-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: psicosus
+      SPRING_RABBITMQ_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      AVAILABILITY_SERVICE_URL: http://availability-service:8082
+      JITSI_BASE_URL: https://meet.jit.si/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  supervision-service:
+    build: ./supervision-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: psicosus
+      SPRING_RABBITMQ_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      SESSION_SERVICE_URL: http://session-service:8083
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  medical-record-service:
+    build: ./medical-record-service
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/psicosus
+      SPRING_DATASOURCE_USERNAME: psicosus
+      SPRING_DATASOURCE_PASSWORD: psicosus
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: psicosus
+      SPRING_RABBITMQ_PASSWORD: psicosus
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+
+volumes:
+  pgdata:

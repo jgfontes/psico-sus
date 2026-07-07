@@ -1,0 +1,39 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: supervision-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/psicosus}
+    username: ${SPRING_DATASOURCE_USERNAME:psicosus}
+    password: ${SPRING_DATASOURCE_PASSWORD:psicosus}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: supervision
+    show-sql: false
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:psicosus}
+    password: ${SPRING_RABBITMQ_PASSWORD:psicosus}
+  jackson:
+    default-property-inclusion: non_null
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-secret-change-me}
+
+psicosus:
+  events:
+    exchange: psicosus.events
+  services:
+    session-service-url: ${SESSION_SERVICE_URL:http://localhost:8083}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html

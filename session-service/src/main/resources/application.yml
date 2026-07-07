@@ -1,0 +1,42 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: session-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/psicosus}
+    username: ${SPRING_DATASOURCE_USERNAME:psicosus}
+    password: ${SPRING_DATASOURCE_PASSWORD:psicosus}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: session
+    show-sql: false
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:psicosus}
+    password: ${SPRING_RABBITMQ_PASSWORD:psicosus}
+  jackson:
+    default-property-inclusion: non_null
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-secret-change-me}
+
+psicosus:
+  events:
+    exchange: psicosus.events
+  services:
+    availability-service-url: ${AVAILABILITY_SERVICE_URL:http://localhost:8082}
+  jitsi:
+    base-url: ${JITSI_BASE_URL:https://meet.jit.si/}
+    room-prefix: psicosus-
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html

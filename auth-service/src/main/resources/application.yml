@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/psicosus}
+    username: ${SPRING_DATASOURCE_USERNAME:psicosus}
+    password: ${SPRING_DATASOURCE_PASSWORD:psicosus}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: auth
+        format_sql: false
+    show-sql: false
+  jackson:
+    default-property-inclusion: non_null
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-secret-change-me}
+  expiration-seconds: ${JWT_EXPIRATION_SECONDS:28800}
+  patient-expiration-seconds: ${JWT_PATIENT_EXPIRATION_SECONDS:7200}
+  issuer: psicosus-auth-service
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
