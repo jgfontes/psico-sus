@@ -67,6 +67,11 @@ before running steps 26-28.
 
 ## Notes / gotchas carried over from the code review
 
+- **Login authenticates with email, not CPF.** `/auth/login` takes
+  `{ "email", "password" }`; `/auth/register` now also requires `name` and a
+  unique `email` in addition to `cpf`. The "Login - *" requests reuse the same
+  `*Email` variable that was generated when the corresponding entity/credential
+  was registered.
 - **`/auth/register` is public and doesn't verify `referenceId`.** The
   collection follows the intended flow (create the entity first, then
   register credentials against its id), but nothing in the API enforces that

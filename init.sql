@@ -148,6 +148,8 @@ CREATE TABLE medical_record.internship_hours (
 -- =====================
 CREATE TABLE auth.user_credential (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name          VARCHAR(150) NOT NULL,
+    email         VARCHAR(150) NOT NULL UNIQUE,
     cpf           VARCHAR(11) UNIQUE,
     password_hash VARCHAR(200),
     role          VARCHAR(20) NOT NULL,
@@ -155,5 +157,6 @@ CREATE TABLE auth.user_credential (
     active        BOOLEAN NOT NULL DEFAULT true,
     created_at    TIMESTAMP NOT NULL DEFAULT now()
 );
-CREATE INDEX idx_user_credential_cpf  ON auth.user_credential(cpf);
-CREATE INDEX idx_user_credential_role ON auth.user_credential(role);
+CREATE INDEX idx_user_credential_email ON auth.user_credential(email);
+CREATE INDEX idx_user_credential_cpf   ON auth.user_credential(cpf);
+CREATE INDEX idx_user_credential_role  ON auth.user_credential(role);

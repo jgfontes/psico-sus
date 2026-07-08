@@ -41,8 +41,13 @@ public class AuthController {
         if (repository.existsByCpf(request.cpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "cpf already registered");
         }
+        if (repository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "email already registered");
+        }
 
         UserCredential credential = UserCredential.builder()
+                .name(request.name())
+                .email(request.email())
                 .cpf(request.cpf())
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .role(request.role())
@@ -56,7 +61,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        UserCredential credential = repository.findByCpfAndActiveTrue(request.cpf())
+        UserCredential credential = repository.findByEmailAndActiveTrue(request.email())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid credentials"));
 
         if (!passwordEncoder.matches(request.password(), credential.getPasswordHash())) {
