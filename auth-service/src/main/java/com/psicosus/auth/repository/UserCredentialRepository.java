@@ -8,7 +8,9 @@ import java.util.UUID;
 
 public interface UserCredentialRepository extends JpaRepository<UserCredential, UUID> {
 
-    Optional<UserCredential> findByCpfAndActiveTrue(String cpf);
+    Optional<UserCredential> findByEmailAndActiveTrue(String email);
 
     boolean existsByCpf(String cpf);
+
+    boolean existsByEmail(String email);
 }

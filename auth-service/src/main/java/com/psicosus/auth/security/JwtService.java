@@ -16,16 +16,13 @@ public class JwtService {
     private final JwtKeyProvider keyProvider;
     private final String issuer;
     private final long expirationSeconds;
-    private final long patientExpirationSeconds;
 
     public JwtService(JwtKeyProvider keyProvider,
                        @Value("${jwt.issuer}") String issuer,
-                       @Value("${jwt.expiration-seconds}") long expirationSeconds,
-                       @Value("${jwt.patient-expiration-seconds}") long patientExpirationSeconds) {
+                       @Value("${jwt.expiration-seconds}") long expirationSeconds) {
         this.keyProvider = keyProvider;
         this.issuer = issuer;
         this.expirationSeconds = expirationSeconds;
-        this.patientExpirationSeconds = patientExpirationSeconds;
     }
 
     public IssuedToken issueForUser(UUID userId, Role role, UUID referenceId) {
@@ -33,7 +30,7 @@ public class JwtService {
     }
 
     public IssuedToken issueForPatient(UUID patientId, String patientName) {
-        return issue(patientId, Role.PATIENT, null, patientName, patientExpirationSeconds);
+        return issue(patientId, Role.PATIENT, null, patientName, expirationSeconds);
     }
 
     private IssuedToken issue(UUID subject, Role role, UUID referenceId, String name, long ttlSeconds) {

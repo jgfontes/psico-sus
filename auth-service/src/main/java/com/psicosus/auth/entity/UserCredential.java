@@ -23,6 +23,12 @@ public class UserCredential {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false, length = 150)
+    private String name;
+
+    @Column(unique = true, nullable = false, length = 150)
+    private String email;
+
     @Column(unique = true, length = 11)
     private String cpf;
 

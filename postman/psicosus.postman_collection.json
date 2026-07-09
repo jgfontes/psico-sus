@@ -59,6 +59,7 @@
     { "key": "universityCnpj", "value": "" },
     { "key": "universityId", "value": "" },
     { "key": "universityCpf", "value": "" },
+    { "key": "universityEmail", "value": "" },
     { "key": "universityPassword", "value": "Passw0rd!123" },
     { "key": "universityToken", "value": "" },
     { "key": "studentCpf", "value": "" },
@@ -93,7 +94,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{universityCpf}}\",\n  \"password\": \"{{universityPassword}}\",\n  \"role\": \"UNIVERSITY\",\n  \"referenceId\": \"{{universityId}}\"\n}",
+              "raw": "{\n  \"name\": \"Universidade Exemplo - Admin\",\n  \"email\": \"{{universityEmail}}\",\n  \"cpf\": \"{{universityCpf}}\",\n  \"password\": \"{{universityPassword}}\",\n  \"role\": \"UNIVERSITY\",\n  \"referenceId\": \"{{universityId}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -106,7 +107,13 @@
           "event": [
             {
               "listen": "prerequest",
-              "script": { "type": "text/javascript", "exec": ["ensureVar('universityCpf', () => randomDigits(11));"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "ensureVar('universityCpf', () => randomDigits(11));",
+                  "ensureVar('universityEmail', () => 'university.' + Date.now() + '@example.com');"
+                ]
+              }
             },
             {
               "listen": "test",
@@ -125,7 +132,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{universityCpf}}\",\n  \"password\": \"{{universityPassword}}\"\n}",
+              "raw": "{\n  \"email\": \"{{universityEmail}}\",\n  \"password\": \"{{universityPassword}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -156,7 +163,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{supervisorCpf}}\",\n  \"password\": \"{{supervisorPassword}}\",\n  \"role\": \"SUPERVISOR\",\n  \"referenceId\": \"{{supervisorId}}\"\n}",
+              "raw": "{\n  \"name\": \"Dra. Ana Supervisora\",\n  \"email\": \"{{supervisorEmail}}\",\n  \"cpf\": \"{{supervisorCpf}}\",\n  \"password\": \"{{supervisorPassword}}\",\n  \"role\": \"SUPERVISOR\",\n  \"referenceId\": \"{{supervisorId}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -184,7 +191,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{supervisorCpf}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}",
+              "raw": "{\n  \"email\": \"{{supervisorEmail}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -215,7 +222,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{studentCpf}}\",\n  \"password\": \"{{studentPassword}}\",\n  \"role\": \"STUDENT\",\n  \"referenceId\": \"{{studentId}}\"\n}",
+              "raw": "{\n  \"name\": \"Joao Estudante\",\n  \"email\": \"{{studentEmail}}\",\n  \"cpf\": \"{{studentCpf}}\",\n  \"password\": \"{{studentPassword}}\",\n  \"role\": \"STUDENT\",\n  \"referenceId\": \"{{studentId}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -243,7 +250,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"cpf\": \"{{studentCpf}}\",\n  \"password\": \"{{studentPassword}}\"\n}",
+              "raw": "{\n  \"email\": \"{{studentEmail}}\",\n  \"password\": \"{{studentPassword}}\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {

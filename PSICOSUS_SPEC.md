@@ -270,6 +270,8 @@ CREATE TABLE medical_record.internship_hours (
 ```sql
 CREATE TABLE auth.user_credential (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name          VARCHAR(150) NOT NULL,
+    email         VARCHAR(150) NOT NULL UNIQUE,
     cpf           VARCHAR(11) UNIQUE,   -- null for anonymous patient sessions
     password_hash VARCHAR(200),         -- bcrypt hash; null for anonymous patient sessions
     role          VARCHAR(20) NOT NULL,
@@ -279,8 +281,9 @@ CREATE TABLE auth.user_credential (
     created_at    TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_user_credential_cpf  ON auth.user_credential(cpf);
-CREATE INDEX idx_user_credential_role ON auth.user_credential(role);
+CREATE INDEX idx_user_credential_email ON auth.user_credential(email);
+CREATE INDEX idx_user_credential_cpf   ON auth.user_credential(cpf);
+CREATE INDEX idx_user_credential_role  ON auth.user_credential(role);
 ```
 
 ---
@@ -301,6 +304,8 @@ Creates login credentials for a `STUDENT`, `SUPERVISOR`, or `UNIVERSITY` user. C
 **Request body:**
 ```json
 {
+  "name": "string",
+  "email": "string",
   "cpf": "string",
   "password": "string",
   "role": "STUDENT",
@@ -319,12 +324,12 @@ Creates login credentials for a `STUDENT`, `SUPERVISOR`, or `UNIVERSITY` user. C
 ---
 
 #### `POST /auth/login`
-Authenticates with CPF + password and returns a signed Bearer token.
+Authenticates with email + password and returns a signed Bearer token.
 
 **Request body:**
 ```json
 {
-  "cpf": "string",
+  "email": "string",
   "password": "string"
 }
 ```
@@ -356,10 +361,12 @@ Issues a short-lived Bearer token for a patient in crisis — no password step, 
 {
   "accessToken": "eyJhbGciOi...",
   "tokenType": "Bearer",
-  "expiresIn": 7200,
+  "expiresIn": 28800,
   "patientId": "uuid"
 }
 ```
+
+Note: patients get the same `expiresIn` as any other role — there is no separate patient-specific TTL, so `jwt.expiration-seconds` (`JWT_EXPIRATION_SECONDS`) is the only expiration setting `auth-service` has.
 
 ---
 
@@ -927,7 +934,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: psicosus
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
       JWT_EXPIRATION_SECONDS: 28800
-      JWT_PATIENT_EXPIRATION_SECONDS: 7200
     depends_on:
       - postgres
 
@@ -1171,6 +1177,8 @@ CREATE TABLE medical_record.internship_hours (
 -- =====================
 CREATE TABLE auth.user_credential (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name          VARCHAR(150) NOT NULL,
+    email         VARCHAR(150) NOT NULL UNIQUE,
     cpf           VARCHAR(11) UNIQUE,
     password_hash VARCHAR(200),
     role          VARCHAR(20) NOT NULL,
@@ -1178,8 +1186,9 @@ CREATE TABLE auth.user_credential (
     active        BOOLEAN NOT NULL DEFAULT true,
     created_at    TIMESTAMP NOT NULL DEFAULT now()
 );
-CREATE INDEX idx_user_credential_cpf  ON auth.user_credential(cpf);
-CREATE INDEX idx_user_credential_role ON auth.user_credential(role);
+CREATE INDEX idx_user_credential_email ON auth.user_credential(email);
+CREATE INDEX idx_user_credential_cpf   ON auth.user_credential(cpf);
+CREATE INDEX idx_user_credential_role  ON auth.user_credential(role);
 ```
 
 ---

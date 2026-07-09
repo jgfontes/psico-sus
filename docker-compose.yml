@@ -47,7 +47,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: psicosus
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
       JWT_EXPIRATION_SECONDS: 28800
-      JWT_PATIENT_EXPIRATION_SECONDS: 7200
     depends_on:
       postgres:
         condition: service_healthy
