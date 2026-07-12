@@ -104,7 +104,7 @@ CREATE TABLE availability.university (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name       VARCHAR(200) NOT NULL,
     cnpj       VARCHAR(14) NOT NULL UNIQUE,
-    state      CHAR(2) NOT NULL,
+    state      VARCHAR(2) NOT NULL,
     city       VARCHAR(100) NOT NULL,
     active     BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT now()
@@ -507,6 +507,18 @@ Returns the next available student (used internally by `session-service`).
 ```
 
 **Response 404:** no student currently available.
+
+---
+
+#### `GET /availability/student/active-count`
+Returns how many students are currently "working" — i.e. whose latest status is `AVAILABLE` or `IN_SESSION`. Used internally by `queue-service` to estimate wait time (patients are served concurrently by these students). Requires a `SERVICE`-role token.
+
+**Response 200:**
+```json
+{
+  "activeStudents": 3
+}
+```
 
 ---
 
@@ -925,7 +937,7 @@ services:
       RABBITMQ_DEFAULT_PASS: psicosus
 
   auth-service:
-    build: ./auth-service
+    build: ../auth-service
     ports:
       - "8080:8080"
     environment:
@@ -938,7 +950,7 @@ services:
       - postgres
 
   queue-service:
-    build: ./queue-service
+    build: ../queue-service
     ports:
       - "8081:8081"
     environment:
@@ -947,13 +959,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: psicosus
       SPRING_RABBITMQ_HOST: rabbitmq
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      AVAILABILITY_SERVICE_URL: http://availability-service:8082
     depends_on:
       - postgres
       - rabbitmq
       - auth-service
 
   availability-service:
-    build: ./availability-service
+    build: ../availability-service
     ports:
       - "8082:8082"
     environment:
@@ -969,7 +982,7 @@ services:
       - auth-service
 
   session-service:
-    build: ./session-service
+    build: ../session-service
     ports:
       - "8083:8083"
     environment:
@@ -987,7 +1000,7 @@ services:
       - auth-service
 
   supervision-service:
-    build: ./supervision-service
+    build: ../supervision-service
     ports:
       - "8084:8084"
     environment:
@@ -1003,7 +1016,7 @@ services:
       - auth-service
 
   medical-record-service:
-    build: ./medical-record-service
+    build: ../medical-record-service
     ports:
       - "8085:8085"
     environment:
@@ -1062,7 +1075,7 @@ CREATE TABLE availability.university (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name       VARCHAR(200) NOT NULL,
     cnpj       VARCHAR(14) NOT NULL UNIQUE,
-    state      CHAR(2) NOT NULL,
+    state      VARCHAR(2) NOT NULL,
     city       VARCHAR(100) NOT NULL,
     active     BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT now()

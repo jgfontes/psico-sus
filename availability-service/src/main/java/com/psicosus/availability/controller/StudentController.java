@@ -45,6 +45,12 @@ public class StudentController {
         return ResponseEntity.ok(studentService.next());
     }
 
+    @GetMapping("/active-count")
+    @PreAuthorize("hasRole('SERVICE')")
+    public ResponseEntity<ActiveStudentCountResponse> activeCount() {
+        return ResponseEntity.ok(new ActiveStudentCountResponse(studentService.activeStudentCount()));
+    }
+
     @GetMapping("/{studentId}/hours")
     @PreAuthorize("hasAnyRole('STUDENT', 'SUPERVISOR')")
     public ResponseEntity<StudentHoursResponse> hours(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID studentId) {

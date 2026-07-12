@@ -32,7 +32,7 @@ CREATE TABLE availability.university (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name       VARCHAR(200) NOT NULL,
     cnpj       VARCHAR(14) NOT NULL UNIQUE,
-    state      CHAR(2) NOT NULL,
+    state      VARCHAR(2) NOT NULL,
     city       VARCHAR(100) NOT NULL,
     active     BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT now()
