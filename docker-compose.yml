@@ -63,6 +63,7 @@ services:
       SPRING_RABBITMQ_USERNAME: psicosus
       SPRING_RABBITMQ_PASSWORD: psicosus
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      AVAILABILITY_SERVICE_URL: http://availability-service:8082
     depends_on:
       postgres:
         condition: service_healthy

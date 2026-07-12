@@ -83,6 +83,18 @@ public class StudentService {
         return new StudentStatusUpdateResponse(studentId, newStatus.name(), now);
     }
 
+    /**
+     * Counts students currently "working": those whose latest status is AVAILABLE or IN_SESSION.
+     * queue-service uses this to estimate wait time, since these students serve patients concurrently.
+     */
+    @Transactional(readOnly = true)
+    public long activeStudentCount() {
+        return statusRepository.findLatestStatusPerStudent().stream()
+                .filter(s -> s.getStatus() == StudentStatusValue.AVAILABLE
+                        || s.getStatus() == StudentStatusValue.IN_SESSION)
+                .count();
+    }
+
     @Transactional(readOnly = true)
     public NextStudentResponse next() {
         List<StudentStatus> latest = statusRepository.findLatestStatusPerStudent();
