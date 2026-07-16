@@ -45,6 +45,12 @@ public class StudentController {
         return ResponseEntity.ok(studentService.next());
     }
 
+    @PostMapping("/claim")
+    @PreAuthorize("hasRole('SERVICE')")
+    public ResponseEntity<ClaimStudentResponse> claim() {
+        return ResponseEntity.ok(studentService.claimNextAvailable());
+    }
+
     @GetMapping("/active-count")
     @PreAuthorize("hasRole('SERVICE')")
     public ResponseEntity<ActiveStudentCountResponse> activeCount() {

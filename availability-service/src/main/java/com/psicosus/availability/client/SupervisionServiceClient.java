@@ -27,7 +27,10 @@ public class SupervisionServiceClient {
 
     public UUID resolveSupervisorIdByCrp(String crp) {
         SupervisorLookupResponse response = restClient.get()
-                .uri("/supervision/supervisor/by-crp/{crp}", crp)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/supervision/supervisor/by-crp")
+                        .queryParam("crp", crp)
+                        .build())
                 .header("Authorization", "Bearer " + internalTokenService.issue())
                 .retrieve()
                 .body(SupervisorLookupResponse.class);

@@ -26,13 +26,16 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentStatusRepository statusRepository;
     private final SupervisionServiceClient supervisionServiceClient;
+    private final MatchingService matchingService;
 
     public StudentService(StudentRepository studentRepository,
                            StudentStatusRepository statusRepository,
-                           SupervisionServiceClient supervisionServiceClient) {
+                           SupervisionServiceClient supervisionServiceClient,
+                           MatchingService matchingService) {
         this.studentRepository = studentRepository;
         this.statusRepository = statusRepository;
         this.supervisionServiceClient = supervisionServiceClient;
+        this.matchingService = matchingService;
     }
 
     @Transactional
@@ -80,13 +83,13 @@ public class StudentService {
                 .updatedAt(now)
                 .build());
 
+        if (newStatus == StudentStatusValue.AVAILABLE) {
+            matchingService.matchNextWaitingPatient();
+        }
+
         return new StudentStatusUpdateResponse(studentId, newStatus.name(), now);
     }
 
-    /**
-     * Counts students currently "working": those whose latest status is AVAILABLE or IN_SESSION.
-     * queue-service uses this to estimate wait time, since these students serve patients concurrently.
-     */
     @Transactional(readOnly = true)
     public long activeStudentCount() {
         return statusRepository.findLatestStatusPerStudent().stream()
@@ -151,5 +154,49 @@ public class StudentService {
             student.setCompletedHours(student.getCompletedHours().add(additionalHours));
             studentRepository.save(student);
         });
+    }
+
+    /**
+     * Atomically claims the oldest available student for a session.
+     * Uses SELECT ... FOR UPDATE SKIP LOCKED so concurrent claims grab distinct students.
+     * Once locked, immediately writes an IN_SESSION status row within the same transaction.
+     *
+     * @return the claimed student's details including their supervisor
+     * @throws ResponseStatusException 404 if no student is available, 409/502 on supervisor issues
+     */
+    @Transactional
+    public ClaimStudentResponse claimNextAvailable() {
+        StudentStatus available = statusRepository.findAndLockOldestAvailable()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no student currently available"));
+
+        return doClaimStudent(available);
+    }
+
+    private ClaimStudentResponse doClaimStudent(StudentStatus available) {
+        Student student = studentRepository.findById(available.getStudentId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "student not found"));
+
+        if (student.getSupervisorCrp() == null || student.getSupervisorCrp().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "available student has no assigned supervisor");
+        }
+
+        UUID supervisorId;
+        try {
+            supervisorId = supervisionServiceClient.resolveSupervisorIdByCrp(student.getSupervisorCrp());
+        } catch (RestClientException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "could not resolve supervisor", e);
+        }
+        if (supervisorId == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "supervisor CRP not found in supervision-service");
+        }
+
+        // Mark IN_SESSION within the same transaction — the lock prevents races
+        statusRepository.save(StudentStatus.builder()
+                .studentId(student.getId())
+                .status(StudentStatusValue.IN_SESSION)
+                .updatedAt(Instant.now())
+                .build());
+
+        return new ClaimStudentResponse(student.getId(), student.getName(), supervisorId);
     }
 }
