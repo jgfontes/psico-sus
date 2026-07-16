@@ -18,12 +18,15 @@ CREATE TABLE queue.queue_entry (
     status              VARCHAR(20) NOT NULL DEFAULT 'WAITING',
     position            INTEGER,
     estimated_wait_min  INTEGER,
+    session_id          UUID,
+    jitsi_link          VARCHAR(300),
     created_at          TIMESTAMP NOT NULL DEFAULT now(),
     updated_at          TIMESTAMP NOT NULL DEFAULT now(),
     expired_at          TIMESTAMP
 );
 CREATE INDEX idx_queue_entry_status     ON queue.queue_entry(status);
 CREATE INDEX idx_queue_entry_patient_id ON queue.queue_entry(patient_id);
+CREATE UNIQUE INDEX uq_queue_entry_patient_waiting ON queue.queue_entry(patient_id) WHERE status = 'WAITING';
 
 -- =====================
 -- SCHEMA: availability
@@ -82,6 +85,8 @@ CREATE TABLE session.session (
 CREATE INDEX idx_session_patient_id ON session.session(patient_id);
 CREATE INDEX idx_session_student_id ON session.session(student_id);
 CREATE INDEX idx_session_status     ON session.session(status);
+CREATE UNIQUE INDEX uq_session_queue_entry_id ON session.session(queue_entry_id);
+CREATE UNIQUE INDEX uq_session_active_student ON session.session(student_id) WHERE status IN ('WAITING_START', 'IN_PROGRESS');
 
 CREATE TABLE session.session_event (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
