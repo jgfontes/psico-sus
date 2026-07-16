@@ -56,30 +56,106 @@
     }
   ],
   "variable": [
-    { "key": "universityCnpj", "value": "" },
-    { "key": "universityId", "value": "" },
-    { "key": "universityCpf", "value": "" },
-    { "key": "universityEmail", "value": "" },
-    { "key": "universityPassword", "value": "Passw0rd!123" },
-    { "key": "universityToken", "value": "" },
-    { "key": "studentCpf", "value": "" },
-    { "key": "studentEmail", "value": "" },
-    { "key": "studentId", "value": "" },
-    { "key": "studentPassword", "value": "Passw0rd!123" },
-    { "key": "studentToken", "value": "" },
-    { "key": "supervisorCpf", "value": "" },
-    { "key": "supervisorEmail", "value": "" },
-    { "key": "supervisorId", "value": "" },
-    { "key": "supervisorCrp", "value": "" },
-    { "key": "supervisorPassword", "value": "Passw0rd!123" },
-    { "key": "supervisorToken", "value": "" },
-    { "key": "patientToken", "value": "" },
-    { "key": "patientId", "value": "" },
-    { "key": "queueEntryId", "value": "" },
-    { "key": "sessionId", "value": "" },
-    { "key": "interventionId", "value": "" },
-    { "key": "internshipHoursId", "value": "" },
-    { "key": "serviceToken", "value": "" }
+    {
+      "key": "universityCnpj",
+      "value": ""
+    },
+    {
+      "key": "universityId",
+      "value": ""
+    },
+    {
+      "key": "universityCpf",
+      "value": ""
+    },
+    {
+      "key": "universityEmail",
+      "value": ""
+    },
+    {
+      "key": "universityPassword",
+      "value": "Passw0rd!123"
+    },
+    {
+      "key": "universityToken",
+      "value": ""
+    },
+    {
+      "key": "studentCpf",
+      "value": ""
+    },
+    {
+      "key": "studentEmail",
+      "value": ""
+    },
+    {
+      "key": "studentId",
+      "value": ""
+    },
+    {
+      "key": "studentPassword",
+      "value": "Passw0rd!123"
+    },
+    {
+      "key": "studentToken",
+      "value": ""
+    },
+    {
+      "key": "supervisorCpf",
+      "value": ""
+    },
+    {
+      "key": "supervisorEmail",
+      "value": ""
+    },
+    {
+      "key": "supervisorId",
+      "value": ""
+    },
+    {
+      "key": "supervisorCrp",
+      "value": ""
+    },
+    {
+      "key": "supervisorPassword",
+      "value": "Passw0rd!123"
+    },
+    {
+      "key": "supervisorToken",
+      "value": ""
+    },
+    {
+      "key": "patientToken",
+      "value": ""
+    },
+    {
+      "key": "patientId",
+      "value": ""
+    },
+    {
+      "key": "queueEntryId",
+      "value": ""
+    },
+    {
+      "key": "sessionId",
+      "value": ""
+    },
+    {
+      "key": "interventionId",
+      "value": ""
+    },
+    {
+      "key": "internshipHoursId",
+      "value": ""
+    },
+    {
+      "key": "serviceToken",
+      "value": ""
+    },
+    {
+      "key": "jwtSecret",
+      "value": "local-dev-secret-change-me"
+    }
   ],
   "item": [
     {
@@ -90,17 +166,33 @@
           "name": "Register Credentials - University",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Universidade Exemplo - Admin\",\n  \"email\": \"{{universityEmail}}\",\n  \"cpf\": \"{{universityCpf}}\",\n  \"password\": \"{{universityPassword}}\",\n  \"role\": \"UNIVERSITY\",\n  \"referenceId\": \"{{universityId}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/register",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Run '1. Availability Service / Register University' first so {{universityId}} is populated."
           },
@@ -119,7 +211,9 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('Status is 201', () => pm.response.code === 201);"]
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.code === 201);"
+                ]
               }
             }
           ]
@@ -128,17 +222,33 @@
           "name": "Login - University",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{universityEmail}}\",\n  \"password\": \"{{universityPassword}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/login",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "event": [
@@ -159,17 +269,33 @@
           "name": "Register Credentials - Supervisor",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Dra. Ana Supervisora\",\n  \"email\": \"{{supervisorEmail}}\",\n  \"cpf\": \"{{supervisorCpf}}\",\n  \"password\": \"{{supervisorPassword}}\",\n  \"role\": \"SUPERVISOR\",\n  \"referenceId\": \"{{supervisorId}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/register",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Run '3. Supervision Service / Register Supervisor' first so {{supervisorId}} is populated."
           },
@@ -178,7 +304,9 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('Status is 201', () => pm.response.code === 201);"]
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.code === 201);"
+                ]
               }
             }
           ]
@@ -187,17 +315,33 @@
           "name": "Login - Supervisor",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{supervisorEmail}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/login",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "event": [
@@ -218,17 +362,33 @@
           "name": "Register Credentials - Student",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Joao Estudante\",\n  \"email\": \"{{studentEmail}}\",\n  \"cpf\": \"{{studentCpf}}\",\n  \"password\": \"{{studentPassword}}\",\n  \"role\": \"STUDENT\",\n  \"referenceId\": \"{{studentId}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/register",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             },
             "description": "Run '2. Availability Service / Register Student' first so {{studentId}} is populated."
           },
@@ -237,7 +397,9 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('Status is 201', () => pm.response.code === 201);"]
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.code === 201);"
+                ]
               }
             }
           ]
@@ -246,17 +408,33 @@
           "name": "Login - Student",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{studentEmail}}\",\n  \"password\": \"{{studentPassword}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/login",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "event": [
@@ -277,17 +455,33 @@
           "name": "Patient Session (Anonymous)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"patientName\": \"Maria Teste\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{authUrl}}/auth/patient-session",
-              "host": ["{{authUrl}}"],
-              "path": ["auth", "patient-session"]
+              "host": [
+                "{{authUrl}}"
+              ],
+              "path": [
+                "auth",
+                "patient-session"
+              ]
             },
             "description": "No password step by design - issues a short-lived PATIENT token immediately."
           },
@@ -316,24 +510,45 @@
           "name": "Register University",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "noauth" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Universidade Exemplo\",\n  \"cnpj\": \"{{universityCnpj}}\",\n  \"state\": \"SP\",\n  \"city\": \"Sao Paulo\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{availabilityUrl}}/availability/university",
-              "host": ["{{availabilityUrl}}"],
-              "path": ["availability", "university"]
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "university"
+              ]
             },
             "description": "Deliberately open (no Bearer token) - onboarding the first partner university has no prior actor to authenticate as."
           },
           "event": [
             {
               "listen": "prerequest",
-              "script": { "type": "text/javascript", "exec": ["ensureVar('universityCnpj', () => randomDigits(14));"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "ensureVar('universityCnpj', () => randomDigits(14));"
+                ]
+              }
             },
             {
               "listen": "test",
@@ -351,17 +566,39 @@
           "name": "Register Student",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{universityToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{universityToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Joao Estudante\",\n  \"email\": \"{{studentEmail}}\",\n  \"cpf\": \"{{studentCpf}}\",\n  \"universityId\": \"{{universityId}}\",\n  \"semester\": 8,\n  \"targetHours\": 300.0,\n  \"supervisorCrp\": \"{{supervisorCrp}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{availabilityUrl}}/availability/student",
-              "host": ["{{availabilityUrl}}"],
-              "path": ["availability", "student"]
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student"
+              ]
             },
             "description": "Requires hasRole('UNIVERSITY'). Run '3. Supervision Service / Register Supervisor' beforehand if you want supervisorCrp populated (optional field)."
           },
@@ -392,24 +629,53 @@
           "name": "Update Student Status -> AVAILABLE",
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"AVAILABLE\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{availabilityUrl}}/availability/student/{{studentId}}/status",
-              "host": ["{{availabilityUrl}}"],
-              "path": ["availability", "student", "{{studentId}}", "status"]
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student",
+                "{{studentId}}",
+                "status"
+              ]
             },
             "description": "hasAnyRole('STUDENT','SERVICE'). Values: AVAILABLE | IN_SESSION | OFFLINE | PAUSED. Do this before joining the queue so session-service has someone to match."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -418,22 +684,46 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{serviceToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{availabilityUrl}}/availability/student/next",
-              "host": ["{{availabilityUrl}}"],
-              "path": ["availability", "student", "next"]
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student",
+                "next"
+              ]
             },
             "description": "hasRole('SERVICE') only - normally called by session-service, never by a real user. The pre-request script mints a throwaway SERVICE token so this can be exercised directly. Returns 404 if no student is AVAILABLE."
           },
           "event": [
             {
               "listen": "prerequest",
-              "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('serviceToken', mintServiceToken());"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
             },
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200 or 404', () => [200, 404].includes(pm.response.code));"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 or 404', () => [200, 404].includes(pm.response.code));"
+                ]
+              }
             }
           ]
         },
@@ -442,18 +732,134 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{availabilityUrl}}/availability/student/{{studentId}}/hours",
-              "host": ["{{availabilityUrl}}"],
-              "path": ["availability", "student", "{{studentId}}", "hours"]
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student",
+                "{{studentId}}",
+                "hours"
+              ]
             },
             "description": "hasAnyRole('STUDENT','SUPERVISOR'). A STUDENT token can only view its own referenceId; swap to {{supervisorToken}} to view as the supervisor."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Active Student Count (internal)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{availabilityUrl}}/availability/student/active-count",
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student",
+                "active-count"
+              ]
+            },
+            "description": "hasRole('SERVICE'). Returns how many students are currently AVAILABLE or IN_SESSION. Used by queue-service to estimate wait time."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Claim Next Student (internal/atomic)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{availabilityUrl}}/availability/student/claim",
+              "host": [
+                "{{availabilityUrl}}"
+              ],
+              "path": [
+                "availability",
+                "student",
+                "claim"
+              ]
+            },
+            "description": "hasRole('SERVICE'). Atomically claims the next available student using SELECT FOR UPDATE SKIP LOCKED - prevents double-booking under concurrent requests. Returns the claimed student's details. 404 if no student available."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 or 404', () => [200, 404].includes(pm.response.code));"
+                ]
+              }
             }
           ]
         }
@@ -467,17 +873,39 @@
           "name": "Register Supervisor",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{universityToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{universityToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Dra. Ana Supervisora\",\n  \"email\": \"{{supervisorEmail}}\",\n  \"cpf\": \"{{supervisorCpf}}\",\n  \"crp\": \"06/{{$randomInt}}\",\n  \"universityId\": \"{{universityId}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{supervisionUrl}}/supervision/supervisor",
-              "host": ["{{supervisionUrl}}"],
-              "path": ["supervision", "supervisor"]
+              "host": [
+                "{{supervisionUrl}}"
+              ],
+              "path": [
+                "supervision",
+                "supervisor"
+              ]
             },
             "description": "Requires hasRole('UNIVERSITY'). Run this before '1. Auth Service / Register Credentials - Supervisor'."
           },
@@ -511,22 +939,52 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{serviceToken}}" }] },
-            "url": {
-              "raw": "{{supervisionUrl}}/supervision/supervisor/by-crp/{{supervisorCrp}}",
-              "host": ["{{supervisionUrl}}"],
-              "path": ["supervision", "supervisor", "by-crp", "{{supervisorCrp}}"]
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
             },
-            "description": "hasRole('SERVICE') only. Added beyond the original spec so availability-service can resolve a student's supervisor_crp into a supervisorId. Uses a minted SERVICE token."
+            "url": {
+              "raw": "{{supervisionUrl}}/supervision/supervisor/by-crp?crp={{supervisorCrp}}",
+              "host": [
+                "{{supervisionUrl}}"
+              ],
+              "path": [
+                "supervision",
+                "supervisor",
+                "by-crp"
+              ],
+              "query": [
+                {
+                  "key": "crp",
+                  "value": "{{supervisorCrp}}"
+                }
+              ]
+            },
+            "description": "hasRole('SERVICE') only. Resolves a CRP license number to a supervisorId. Uses query param because CRP contains a slash (e.g. 06/12345) which breaks path encoding."
           },
           "event": [
             {
               "listen": "prerequest",
-              "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('serviceToken', mintServiceToken());"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
             },
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -535,18 +993,36 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{supervisorToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{supervisionUrl}}/supervision/active-sessions",
-              "host": ["{{supervisionUrl}}"],
-              "path": ["supervision", "active-sessions"]
+              "host": [
+                "{{supervisionUrl}}"
+              ],
+              "path": [
+                "supervision",
+                "active-sessions"
+              ]
             },
             "description": "hasRole('SUPERVISOR'). Run '4. Session Service / Start Session' first so there is something to list."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -554,17 +1030,40 @@
           "name": "Intervene in Session",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{supervisorToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"reason\": \"Checking in on the session\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{supervisionUrl}}/supervision/intervene/{{sessionId}}",
-              "host": ["{{supervisionUrl}}"],
-              "path": ["supervision", "intervene", "{{sessionId}}"]
+              "host": [
+                "{{supervisionUrl}}"
+              ],
+              "path": [
+                "supervision",
+                "intervene",
+                "{{sessionId}}"
+              ]
             },
             "description": "hasRole('SUPERVISOR'). supervisorId is taken from the token's referenceId claim, never from the body."
           },
@@ -586,18 +1085,38 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{supervisorToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{supervisionUrl}}/supervision/intervention/{{interventionId}}/leave",
-              "host": ["{{supervisionUrl}}"],
-              "path": ["supervision", "intervention", "{{interventionId}}", "leave"]
+              "host": [
+                "{{supervisionUrl}}"
+              ],
+              "path": [
+                "supervision",
+                "intervention",
+                "{{interventionId}}",
+                "leave"
+              ]
             },
             "description": "hasRole('SUPERVISOR')."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         }
@@ -611,17 +1130,39 @@
           "name": "Join Queue",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{patientToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"patientName\": \"Maria Teste\",\n  \"symptomsDescription\": \"Feeling anxious and overwhelmed\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{queueUrl}}/queue/join",
-              "host": ["{{queueUrl}}"],
-              "path": ["queue", "join"]
+              "host": [
+                "{{queueUrl}}"
+              ],
+              "path": [
+                "queue",
+                "join"
+              ]
             },
             "description": "hasRole('PATIENT'). patientId is read from the token's subject claim on purpose, not from the body - run '1. Auth Service / Patient Session' first."
           },
@@ -643,18 +1184,37 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{patientToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{queueUrl}}/queue/position/{{patientId}}",
-              "host": ["{{queueUrl}}"],
-              "path": ["queue", "position", "{{patientId}}"]
+              "host": [
+                "{{queueUrl}}"
+              ],
+              "path": [
+                "queue",
+                "position",
+                "{{patientId}}"
+              ]
             },
             "description": "hasRole('PATIENT') and must be your own patientId, enforced server-side."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -663,18 +1223,36 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{patientToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{queueUrl}}/queue/size",
-              "host": ["{{queueUrl}}"],
-              "path": ["queue", "size"]
+              "host": [
+                "{{queueUrl}}"
+              ],
+              "path": [
+                "queue",
+                "size"
+              ]
             },
             "description": "No @PreAuthorize role restriction, but still requires any valid Bearer token (SecurityConfig defaults to authenticated())."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -683,18 +1261,84 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{patientToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{queueUrl}}/queue/leave/{{patientId}}",
-              "host": ["{{queueUrl}}"],
-              "path": ["queue", "leave", "{{patientId}}"]
+              "host": [
+                "{{queueUrl}}"
+              ],
+              "path": [
+                "queue",
+                "leave",
+                "{{patientId}}"
+              ]
             },
             "description": "hasRole('PATIENT'), own patientId only. NOTE: this is an alternative end to the flow - only run it if you want to test leaving the queue instead of continuing to the session flow below (a session already picks the entry up out of WAITING)."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 204', () => pm.response.code === 204);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 204', () => pm.response.code === 204);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Waiting Patients (internal)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{queueUrl}}/queue/waiting",
+              "host": [
+                "{{queueUrl}}"
+              ],
+              "path": [
+                "queue",
+                "waiting"
+              ]
+            },
+            "description": "hasRole('SERVICE'). Returns all WAITING queue entries ordered by createdAt ASC (oldest first). Used by availability-service's MatchingService to find the next patient to match when a student becomes available."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         }
@@ -708,24 +1352,51 @@
           "name": "Start Session (internal)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{serviceToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{serviceToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"queueEntryId\": \"{{queueEntryId}}\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{sessionUrl}}/session/start",
-              "host": ["{{sessionUrl}}"],
-              "path": ["session", "start"]
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "start"
+              ]
             },
             "description": "hasRole('SERVICE') only - normally triggered by availability-service after consuming patient.joined.queue, never called directly by a client. Uses a minted SERVICE token. Make sure a student status was set to AVAILABLE first."
           },
           "event": [
             {
               "listen": "prerequest",
-              "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('serviceToken', mintServiceToken());"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('serviceToken', mintServiceToken());"
+                ]
+              }
             },
             {
               "listen": "test",
@@ -744,18 +1415,37 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{sessionUrl}}/session/{{sessionId}}/confirm-start",
-              "host": ["{{sessionUrl}}"],
-              "path": ["session", "{{sessionId}}", "confirm-start"]
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "{{sessionId}}",
+                "confirm-start"
+              ]
             },
             "description": "hasRole('STUDENT'). Called when the student actually enters the Jitsi room."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -764,18 +1454,36 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{sessionUrl}}/session/{{sessionId}}",
-              "host": ["{{sessionUrl}}"],
-              "path": ["session", "{{sessionId}}"]
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "{{sessionId}}"
+              ]
             },
             "description": "No @PreAuthorize role restriction, but still requires any valid Bearer token."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -784,18 +1492,77 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{supervisorToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{sessionUrl}}/session/active",
-              "host": ["{{sessionUrl}}"],
-              "path": ["session", "active"]
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "active"
+              ]
             },
             "description": "hasAnyRole('SUPERVISOR','SERVICE')."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Active Session by Patient",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{sessionUrl}}/session/active/patient/{{patientId}}",
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "active",
+                "patient",
+                "{{patientId}}"
+              ]
+            },
+            "description": "hasAnyRole('PATIENT','SERVICE'). Returns the patient's active session (WAITING_START or IN_PROGRESS) with the Jitsi link. Returns 204 No Content if no active session exists. Alternative to polling GET /queue/position."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 or 204', () => [200, 204].includes(pm.response.code));",
+                  "if (pm.response.code === 200) { pm.collectionVariables.set('sessionId', pm.response.json().sessionId); }"
+                ]
+              }
             }
           ]
         },
@@ -803,24 +1570,52 @@
           "name": "End Session",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"endedBy\": \"{{studentId}}\",\n  \"clinicalSummary\": \"Patient presented with acute anxiety symptoms; provided grounding techniques and safety planning.\",\n  \"icd10\": \"F41.1\",\n  \"referral\": \"Follow-up with CAPS unit recommended\",\n  \"suggestedReturn\": \"2026-07-15\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{sessionUrl}}/session/{{sessionId}}/end",
-              "host": ["{{sessionUrl}}"],
-              "path": ["session", "{{sessionId}}", "end"]
+              "host": [
+                "{{sessionUrl}}"
+              ],
+              "path": [
+                "session",
+                "{{sessionId}}",
+                "end"
+              ]
             },
             "description": "hasRole('STUDENT'). Publishes session.ended to RabbitMQ, consumed asynchronously by medical-record-service and availability-service - give it a moment before querying the medical record below."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         }
@@ -835,18 +1630,37 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{patientToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{medicalRecordUrl}}/medical-record/patient/{{patientId}}",
-              "host": ["{{medicalRecordUrl}}"],
-              "path": ["medical-record", "patient", "{{patientId}}"]
+              "host": [
+                "{{medicalRecordUrl}}"
+              ],
+              "path": [
+                "medical-record",
+                "patient",
+                "{{patientId}}"
+              ]
             },
             "description": "Any authenticated role can call this endpoint (no @PreAuthorize); a PATIENT token is restricted server-side to its own patientId."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -855,18 +1669,38 @@
           "request": {
             "method": "GET",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{studentToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{medicalRecordUrl}}/medical-record/internship-hours/student/{{studentId}}",
-              "host": ["{{medicalRecordUrl}}"],
-              "path": ["medical-record", "internship-hours", "student", "{{studentId}}"]
+              "host": [
+                "{{medicalRecordUrl}}"
+              ],
+              "path": [
+                "medical-record",
+                "internship-hours",
+                "student",
+                "{{studentId}}"
+              ]
             },
             "description": "hasAnyRole('STUDENT','SUPERVISOR'). NOTE: the response only exposes sessionId per record, not the internshipHoursId needed by the 'Validate' request below - you'll need to look that id up directly in medical_record.internship_hours until the API exposes it."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         },
@@ -875,18 +1709,38 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{supervisorToken}}" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supervisorToken}}"
+                }
+              ]
+            },
             "url": {
               "raw": "{{medicalRecordUrl}}/medical-record/internship-hours/{{internshipHoursId}}/validate",
-              "host": ["{{medicalRecordUrl}}"],
-              "path": ["medical-record", "internship-hours", "{{internshipHoursId}}", "validate"]
+              "host": [
+                "{{medicalRecordUrl}}"
+              ],
+              "path": [
+                "medical-record",
+                "internship-hours",
+                "{{internshipHoursId}}",
+                "validate"
+              ]
             },
             "description": "hasRole('SUPERVISOR'). Fill in {{internshipHoursId}} manually (see note on 'Get Internship Hours by Student') before running this."
           },
           "event": [
             {
               "listen": "test",
-              "script": { "type": "text/javascript", "exec": ["pm.test('Status is 200', () => pm.response.code === 200);"] }
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.code === 200);"
+                ]
+              }
             }
           ]
         }

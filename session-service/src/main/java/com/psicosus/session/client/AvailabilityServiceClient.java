@@ -20,6 +20,23 @@ public class AvailabilityServiceClient {
         this.internalTokenService = internalTokenService;
     }
 
+    /**
+     * Atomically claims the next available student. The availability-service uses
+     * SELECT FOR UPDATE SKIP LOCKED internally, so concurrent calls will never
+     * claim the same student.
+     */
+    public ClaimedStudent claimNextStudent() {
+        return restClient.post()
+                .uri("/availability/student/claim")
+                .header("Authorization", "Bearer " + internalTokenService.issue())
+                .retrieve()
+                .body(ClaimedStudent.class);
+    }
+
+    /**
+     * @deprecated Use {@link #claimNextStudent()} which does fetch + mark atomically.
+     */
+    @Deprecated
     public NextStudent fetchNextAvailableStudent() {
         return restClient.get()
                 .uri("/availability/student/next")
@@ -28,6 +45,10 @@ public class AvailabilityServiceClient {
                 .body(NextStudent.class);
     }
 
+    /**
+     * @deprecated Use {@link #claimNextStudent()} which does fetch + mark atomically.
+     */
+    @Deprecated
     public void markStudentInSession(UUID studentId) {
         restClient.patch()
                 .uri("/availability/student/{studentId}/status", studentId)
@@ -36,6 +57,9 @@ public class AvailabilityServiceClient {
                 .body(new StatusUpdate("IN_SESSION"))
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    public record ClaimedStudent(UUID studentId, String name, UUID supervisorId) {
     }
 
     public record NextStudent(UUID studentId, String name, UUID supervisorId) {

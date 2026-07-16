@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_schema: queue
+
+jwt:
+  secret: test-secret
+
+psicosus:
+  queue:
+    timeout-minutes: 30
+  events:
+    exchange: psicosus.events
+  services:
+    availability-service-url: http://localhost:${wiremock.server.port}

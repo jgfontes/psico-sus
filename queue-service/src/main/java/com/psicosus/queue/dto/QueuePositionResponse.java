@@ -1,4 +1,6 @@
 package com.psicosus.queue.dto;
 
-public record QueuePositionResponse(int position, int estimatedWaitMinutes, String status) {
+import java.util.UUID;
+
+public record QueuePositionResponse(int position, int estimatedWaitMinutes, String status, UUID sessionId, String jitsiLink) {
 }

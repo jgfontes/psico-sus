@@ -30,10 +30,13 @@ public class SupervisorController {
      * Added beyond the original spec: availability-service only stores a student's supervisor
      * CRP (not a UUID), and resolves it to a supervisorId through this lookup when assembling
      * GET /availability/student/next's response.
+     *
+     * CRP values contain a slash (e.g. "06/12345") which cannot appear in a path segment
+     * without special Tomcat configuration. Using a request parameter instead.
      */
-    @GetMapping("/by-crp/{crp}")
+    @GetMapping("/by-crp")
     @PreAuthorize("hasRole('SERVICE')")
-    public ResponseEntity<SupervisorLookupResponse> byCrp(@PathVariable String crp) {
+    public ResponseEntity<SupervisorLookupResponse> byCrp(@RequestParam String crp) {
         return ResponseEntity.ok(supervisorService.byCrp(crp));
     }
 }

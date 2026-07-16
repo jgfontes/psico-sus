@@ -55,4 +55,14 @@ public class SessionController {
     public ResponseEntity<List<ActiveSessionResponse>> active() {
         return ResponseEntity.ok(sessionService.active());
     }
+
+    @GetMapping("/active/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('PATIENT', 'SERVICE')")
+    public ResponseEntity<ActiveSessionResponse> activeByPatient(@PathVariable UUID patientId) {
+        ActiveSessionResponse response = sessionService.findActiveByPatient(patientId);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
+    }
 }

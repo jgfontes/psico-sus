@@ -19,13 +19,16 @@ public class QueueEventListener {
     private final StudentStatusRepository statusRepository;
     private final SessionServiceClient sessionServiceClient;
     private final StudentService studentService;
+    private final MatchingService matchingService;
 
     public QueueEventListener(StudentStatusRepository statusRepository,
                                SessionServiceClient sessionServiceClient,
-                               StudentService studentService) {
+                               StudentService studentService,
+                               MatchingService matchingService) {
         this.statusRepository = statusRepository;
         this.sessionServiceClient = sessionServiceClient;
         this.studentService = studentService;
+        this.matchingService = matchingService;
     }
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_PATIENT_JOINED)
@@ -38,11 +41,18 @@ public class QueueEventListener {
             return;
         }
 
-        sessionServiceClient.startSession(event.patientId(), event.queueEntryId());
+        try {
+            sessionServiceClient.startSession(event.patientId(), event.queueEntryId());
+        } catch (Exception e) {
+            log.warn("Failed to start session for queueEntryId={}: {}", event.queueEntryId(), e.getMessage());
+            // ACK the message — the patient stays WAITING and will be picked up by
+            // matchNextWaitingPatient when a student becomes available again.
+        }
     }
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_SESSION_ENDED)
     public void onSessionEnded(SessionEndedEvent event) {
         studentService.markAvailableAndAddHours(event.studentId(), event.durationMinutes());
+        matchingService.matchNextWaitingPatient();
     }
 }

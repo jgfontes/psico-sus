@@ -8,6 +8,7 @@ public record SessionStartedEvent(
         UUID patientId,
         UUID studentId,
         UUID supervisorId,
+        UUID queueEntryId,
         String jitsiLink,
         Instant startedAt
 ) {

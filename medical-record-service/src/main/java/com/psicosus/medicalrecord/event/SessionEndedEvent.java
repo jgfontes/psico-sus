@@ -8,6 +8,7 @@ public record SessionEndedEvent(
         UUID patientId,
         UUID studentId,
         UUID supervisorId,
+        UUID queueEntryId,
         int durationMinutes,
         LocalDate sessionDate,
         String clinicalSummary,

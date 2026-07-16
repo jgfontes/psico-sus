@@ -32,6 +32,7 @@ psicosus:
   services:
     session-service-url: ${SESSION_SERVICE_URL:http://localhost:8083}
     supervision-service-url: ${SUPERVISION_SERVICE_URL:http://localhost:8084}
+    queue-service-url: ${QUEUE_SERVICE_URL:http://localhost:8081}
 
 springdoc:
   api-docs:

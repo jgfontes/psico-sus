@@ -36,6 +36,12 @@ public class QueueEntry {
     @Column(name = "estimated_wait_min")
     private Integer estimatedWaitMin;
 
+    @Column(name = "session_id")
+    private UUID sessionId;
+
+    @Column(name = "jitsi_link", length = 300)
+    private String jitsiLink;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();

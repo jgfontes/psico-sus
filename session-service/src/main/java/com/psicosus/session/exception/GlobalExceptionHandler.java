@@ -1,5 +1,6 @@
 package com.psicosus.session.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,5 +19,11 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        Map<String, String> body = Map.of("error", "conflict: duplicate or constraint violation");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 }

@@ -2,8 +2,6 @@
 # the REST calls between queue/availability/session/supervision form a cycle
 # (availability -> session, session -> availability, supervision -> session), so Compose can't
 # order them anyway. Bring the whole stack up together; each service retries on first use.
-version: '3.9'
-
 services:
 
   postgres:
@@ -86,6 +84,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
       SESSION_SERVICE_URL: http://session-service:8083
       SUPERVISION_SERVICE_URL: http://supervision-service:8084
+      QUEUE_SERVICE_URL: http://queue-service:8081
     depends_on:
       postgres:
         condition: service_healthy
@@ -154,6 +153,22 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+      auth-service:
+        condition: service_started
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8090:8090"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me}
+      AUTH_SERVICE_URL: http://auth-service:8080
+      QUEUE_SERVICE_URL: http://queue-service:8081
+      AVAILABILITY_SERVICE_URL: http://availability-service:8082
+      SESSION_SERVICE_URL: http://session-service:8083
+      SUPERVISION_SERVICE_URL: http://supervision-service:8084
+      MEDICAL_RECORD_SERVICE_URL: http://medical-record-service:8085
+    depends_on:
       auth-service:
         condition: service_started
 

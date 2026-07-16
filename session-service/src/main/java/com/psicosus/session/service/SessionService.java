@@ -11,8 +11,11 @@ import com.psicosus.session.event.SessionEndedEvent;
 import com.psicosus.session.event.SessionStartedEvent;
 import com.psicosus.session.repository.SessionEventRepository;
 import com.psicosus.session.repository.SessionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ import java.util.UUID;
 
 @Service
 public class SessionService {
+
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     private final SessionRepository sessionRepository;
     private final SessionEventRepository sessionEventRepository;
@@ -50,7 +55,15 @@ public class SessionService {
 
     @Transactional
     public StartSessionResponse start(UUID patientId, UUID queueEntryId) {
-        AvailabilityServiceClient.NextStudent nextStudent = availabilityServiceClient.fetchNextAvailableStudent();
+        var existing = sessionRepository.findByQueueEntryId(queueEntryId);
+        if (existing.isPresent()) {
+            Session s = existing.get();
+            return new StartSessionResponse(s.getId(), s.getJitsiLink(), s.getJitsiRoomName(),
+                    s.getPatientId(), s.getStudentId(), s.getSupervisorId(),
+                    s.getStatus().name(), s.getCreatedAt());
+        }
+
+        AvailabilityServiceClient.ClaimedStudent claimed = availabilityServiceClient.claimNextStudent();
 
         UUID sessionId = UUID.randomUUID();
         JitsiService.JitsiRoomDTO room = jitsiService.generateRoom(sessionId);
@@ -58,17 +71,23 @@ public class SessionService {
         Session session = Session.builder()
                 .id(sessionId)
                 .patientId(patientId)
-                .studentId(nextStudent.studentId())
-                .supervisorId(nextStudent.supervisorId())
+                .studentId(claimed.studentId())
+                .supervisorId(claimed.supervisorId())
                 .queueEntryId(queueEntryId)
-                .studentName(nextStudent.name())
+                .studentName(claimed.name())
                 .status(SessionStatus.WAITING_START)
                 .jitsiLink(room.jitsiLink())
                 .jitsiRoomName(room.roomName())
                 .build();
-        session = sessionRepository.save(session);
 
-        availabilityServiceClient.markStudentInSession(nextStudent.studentId());
+        try {
+            session = sessionRepository.save(session);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Constraint violation creating session for queueEntryId={}, studentId={}: {}",
+                    queueEntryId, claimed.studentId(), e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "student is already assigned to an active session");
+        }
 
         sessionEventRepository.save(SessionEvent.builder()
                 .sessionId(session.getId())
@@ -78,7 +97,7 @@ public class SessionService {
 
         rabbitTemplate.convertAndSend(exchangeName, RabbitMQConfig.ROUTING_KEY_SESSION_STARTED,
                 new SessionStartedEvent(session.getId(), patientId, session.getStudentId(),
-                        session.getSupervisorId(), session.getJitsiLink(), session.getCreatedAt()));
+                        session.getSupervisorId(), queueEntryId, session.getJitsiLink(), session.getCreatedAt()));
 
         return new StartSessionResponse(session.getId(), session.getJitsiLink(), session.getJitsiRoomName(),
                 session.getPatientId(), session.getStudentId(), session.getSupervisorId(),
@@ -118,7 +137,8 @@ public class SessionService {
 
         rabbitTemplate.convertAndSend(exchangeName, RabbitMQConfig.ROUTING_KEY_SESSION_ENDED,
                 new SessionEndedEvent(session.getId(), session.getPatientId(), session.getStudentId(),
-                        session.getSupervisorId(), durationMinutes, endedAt.atZone(ZoneOffset.UTC).toLocalDate(),
+                        session.getSupervisorId(), session.getQueueEntryId(), durationMinutes,
+                        endedAt.atZone(ZoneOffset.UTC).toLocalDate(),
                         request.clinicalSummary(), request.icd10(), request.referral(), request.suggestedReturn()));
 
         return new EndSessionResponse(session.getId(), session.getStatus().name(), durationMinutes, endedAt);
@@ -129,6 +149,19 @@ public class SessionService {
         Session session = find(sessionId);
         return new SessionDetailResponse(session.getId(), session.getJitsiLink(), session.getPatientId(),
                 session.getStudentId(), session.getSupervisorId(), session.getStatus().name(), session.getStartedAt());
+    }
+
+    @Transactional(readOnly = true)
+    public ActiveSessionResponse findActiveByPatient(UUID patientId) {
+        var statuses = List.of(SessionStatus.WAITING_START, SessionStatus.IN_PROGRESS);
+        Session s = sessionRepository.findByPatientIdAndStatusIn(patientId, statuses)
+                .orElse(null);
+        if (s == null) return null;
+
+        long duration = s.getStartedAt() != null
+                ? Duration.between(s.getStartedAt(), Instant.now()).toMinutes() : 0;
+        return new ActiveSessionResponse(s.getId(), s.getStudentId(), s.getStudentName(),
+                s.getPatientId(), s.getSupervisorId(), s.getJitsiLink(), s.getStartedAt(), duration);
     }
 
     @Transactional(readOnly = true)

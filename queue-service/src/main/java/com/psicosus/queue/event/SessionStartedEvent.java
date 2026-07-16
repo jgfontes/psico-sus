@@ -1,0 +1,15 @@
+package com.psicosus.queue.event;
+
+import java.time.Instant;
+import java.util.UUID;
+
+public record SessionStartedEvent(
+        UUID sessionId,
+        UUID patientId,
+        UUID studentId,
+        UUID supervisorId,
+        UUID queueEntryId,
+        String jitsiLink,
+        Instant startedAt
+) {
+}

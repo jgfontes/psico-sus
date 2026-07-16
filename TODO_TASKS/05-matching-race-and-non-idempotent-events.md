@@ -1,6 +1,6 @@
 # Problem 05 — Student double-booking race & non-idempotent event handling
 
-**Status:** Open — no concurrency guard, no idempotency key
+**Status:** ✅ Resolved
 **Area:** `availability-service` (`QueueEventListener`, `StudentService`), `session-service` (`SessionService.start`, `SessionRepository`)
 **Severity:** High — the same student can be handed to two patients, and a single queued patient can spawn duplicate sessions.
 
