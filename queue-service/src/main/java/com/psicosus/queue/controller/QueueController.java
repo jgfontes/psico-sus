@@ -1,9 +1,6 @@
 package com.psicosus.queue.controller;
 
-import com.psicosus.queue.dto.QueueJoinRequest;
-import com.psicosus.queue.dto.QueueJoinResponse;
-import com.psicosus.queue.dto.QueuePositionResponse;
-import com.psicosus.queue.dto.QueueSizeResponse;
+import com.psicosus.queue.dto.*;
 import com.psicosus.queue.security.JwtClaims;
 import com.psicosus.queue.service.QueueService;
 import jakarta.validation.Valid;
@@ -15,6 +12,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -53,6 +51,15 @@ public class QueueController {
     @GetMapping("/size")
     public ResponseEntity<QueueSizeResponse> size() {
         return ResponseEntity.ok(new QueueSizeResponse(queueService.size()));
+    }
+
+    @GetMapping("/waiting")
+    @PreAuthorize("hasRole('SERVICE')")
+    public ResponseEntity<List<WaitingPatientDTO>> waiting() {
+        var entries = queueService.waitingEntries().stream()
+                .map(e -> new WaitingPatientDTO(e.getId(), e.getPatientId(), e.getCreatedAt()))
+                .toList();
+        return ResponseEntity.ok(entries);
     }
 
     private void requireSelf(Jwt jwt, UUID patientId) {

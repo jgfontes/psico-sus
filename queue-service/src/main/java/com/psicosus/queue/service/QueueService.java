@@ -24,7 +24,6 @@ import java.util.UUID;
 @Service
 public class QueueService {
 
-    /** Rough heuristic for a first version: one patient takes ~5 minutes of a student's time. */
     private static final int AVG_SESSION_MINUTES = 5;
     private static final String ROUTING_KEY_PATIENT_JOINED = "patient.joined.queue";
 
@@ -46,12 +45,6 @@ public class QueueService {
         this.timeoutMinutes = timeoutMinutes;
     }
 
-    /**
-     * Estimated wait in minutes. Students serve patients concurrently, so a patient at
-     * {@code position} waits for roughly {@code ceil(position / activeStudents)} back-to-back
-     * sessions rather than one per patient ahead. If availability-service can't be reached the
-     * active count comes back as 0 and we fall back to a single-server (serial) estimate.
-     */
     private int estimatedWaitMinutes(int position) {
         long activeStudents = availabilityServiceClient.activeStudentCount();
         long divisor = Math.max(activeStudents, 1);
@@ -61,6 +54,10 @@ public class QueueService {
 
     @Transactional
     public QueueJoinResponse join(UUID patientId, QueueJoinRequest request) {
+        if (repository.existsByPatientIdAndStatus(patientId, QueueStatus.WAITING)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "patient already has an active queue entry");
+        }
+
         long waitingAhead = repository.countByStatus(QueueStatus.WAITING);
         int position = (int) waitingAhead + 1;
         int estimatedWait = estimatedWaitMinutes(position);
@@ -82,11 +79,16 @@ public class QueueService {
     @Transactional(readOnly = true)
     public QueuePositionResponse position(UUID patientId) {
         QueueEntry entry = repository.findFirstByPatientIdAndStatusOrderByCreatedAtDesc(patientId, QueueStatus.WAITING)
+                .or(() -> repository.findFirstByPatientIdAndStatusOrderByCreatedAtDesc(patientId, QueueStatus.IN_PROGRESS))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no active queue entry for this patient"));
+
+        if (entry.getStatus() == QueueStatus.IN_PROGRESS) {
+            return new QueuePositionResponse(0, 0, entry.getStatus().name(), entry.getSessionId(), entry.getJitsiLink());
+        }
 
         int position = (int) repository.countByStatusAndCreatedAtBefore(QueueStatus.WAITING, entry.getCreatedAt()) + 1;
         int estimatedWait = estimatedWaitMinutes(position);
-        return new QueuePositionResponse(position, estimatedWait, entry.getStatus().name());
+        return new QueuePositionResponse(position, estimatedWait, entry.getStatus().name(), entry.getSessionId(), entry.getJitsiLink());
     }
 
     @Transactional
@@ -104,11 +106,11 @@ public class QueueService {
         return repository.countByStatus(QueueStatus.WAITING);
     }
 
-    /**
-     * Marks stale WAITING entries as EXPIRED. Alternative guidance (e.g. CVV - 188) is
-     * expected to be shown client-side when a patient polls and sees status EXPIRED;
-     * there is no dedicated notification-service in this first version.
-     */
+    @Transactional(readOnly = true)
+    public List<QueueEntry> waitingEntries() {
+        return repository.findByStatusOrderByCreatedAtAsc(QueueStatus.WAITING);
+    }
+
     @Scheduled(fixedDelay = 60_000)
     @Transactional
     public void expireStaleEntries() {

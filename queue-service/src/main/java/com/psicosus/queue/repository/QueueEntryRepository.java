@@ -18,4 +18,8 @@ public interface QueueEntryRepository extends JpaRepository<QueueEntry, UUID> {
     Optional<QueueEntry> findFirstByPatientIdAndStatusOrderByCreatedAtDesc(UUID patientId, QueueStatus status);
 
     List<QueueEntry> findByStatusAndCreatedAtBefore(QueueStatus status, Instant createdAt);
+
+    List<QueueEntry> findByStatusOrderByCreatedAtAsc(QueueStatus status);
+
+    boolean existsByPatientIdAndStatus(UUID patientId, QueueStatus status);
 }
