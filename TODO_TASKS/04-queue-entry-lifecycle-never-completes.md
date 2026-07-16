@@ -1,6 +1,6 @@
 # Problem 04 — Queue entries never transition to `IN_PROGRESS` / `ATTENDED`
 
-**Status:** Open — the two "success" states are defined but unused
+**Status:** ✅ Resolved
 **Area:** `queue-service` (missing event consumer), `session-service` (no callback toward queue)
 **Severity:** High — a successfully attended patient still looks like they're waiting, forever, until the timeout job wrongly marks them `EXPIRED`.
 

@@ -1,6 +1,6 @@
 # Problem 01 — The patient is never told a session/room is ready
 
-**Status:** Open — no implementation exists yet
+**Status:** ✅ Resolved
 **Area:** `session-service`, `availability-service`, (missing) patient-facing delivery channel
 **Severity:** High — it breaks the core happy path. A session is created but the patient can never reach the video room.
 

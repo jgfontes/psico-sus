@@ -1,6 +1,6 @@
 # Problem 03 — `POST /queue/join` lets the same patient join the queue multiple times
 
-**Status:** Open — no duplicate check exists yet
+**Status:** ✅ Resolved
 **Area:** `queue-service` (`QueueController`, `QueueService`, `QueueEntryRepository`)
 **Severity:** Medium — corrupts queue position/size counts and can spawn multiple sessions for one patient.
 

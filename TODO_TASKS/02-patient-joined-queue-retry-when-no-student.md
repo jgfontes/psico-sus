@@ -1,6 +1,6 @@
 # Problem 02 — `patient.joined.queue` is dropped when no student is available
 
-**Status:** Open — no retry/reprocessing exists yet
+**Status:** ✅ Resolved
 **Area:** `availability-service` (`QueueEventListener`), RabbitMQ topology, `queue-service` (timeout job)
 **Severity:** High — a patient who joins while all students are busy is effectively abandoned until the 30-minute expiry job marks them `EXPIRED`.
 
