@@ -1,0 +1,47 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8080}
+          predicates:
+            - Path=/auth/**
+
+        - id: queue-service
+          uri: ${QUEUE_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/queue/**
+
+        - id: availability-service
+          uri: ${AVAILABILITY_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/availability/**
+
+        - id: session-service
+          uri: ${SESSION_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/session/**
+
+        - id: supervision-service
+          uri: ${SUPERVISION_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/supervision/**
+
+        - id: medical-record-service
+          uri: ${MEDICAL_RECORD_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/medical-record/**
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-secret-change-me}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
